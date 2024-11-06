@@ -10,6 +10,8 @@ Emacs용 참신세벌식K 입력기
 따라서, 중성과 종성은 참신세벌식D의 layout을 따르고 있으며, 초성만 세모이의 layout과 동일합니다.
 특히, p키가 모음 조합키 "ㅜ"에 해당하고, 마침표가 갈마들이로써 "ㅗ"로 작동합니다.
 
+
+
 ## 참신세벌식D와 세모이 자판
 Original 참신세벌식D 자판과 세모이 자판의 정보에 대해서는 다음 링크를 참조해 주세요:
 https://doc9107.tistory.com/67
@@ -24,8 +26,11 @@ https://blog.naver.com/eekdland
 그러면, ~/.emacs 파일 또는 ~/.emacs.d/init.el 파일 내에 다음과 같이 적어 두시면 됩니다:
 
 (add-to-list 'load-path "~/.emacs.d/hangul3")
+
 (require 'hangul-c3k)
+
 (setq default-input-method "korean-hangul-c3k")
+
 
 참고로 emacs내에서 한영 변환은 Shift+space 또는 Ctrl + backslash 로 할 수 있습니다!
 
