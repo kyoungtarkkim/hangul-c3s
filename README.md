@@ -23,7 +23,7 @@ https://blog.naver.com/eekdland
 
 
 ## 사용법 (예)
-~/.emacs.d/hangul3/hangul-c3k.el 을 복사해 두었다고 가정하겠습니다.
+~/.emacs.d/hangul3/hangul-c3k.el 에 파일을 복사해 두었다고 가정하겠습니다.
 
 그러면, ~/.emacs 파일 또는 ~/.emacs.d/init.el 파일 내에 다음과 같이 적어 두시면 됩니다:
 
