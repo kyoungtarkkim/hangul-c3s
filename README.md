@@ -27,10 +27,8 @@ Original 참신세벌식D 자판과 세모이 자판의 정보에 대해서는 �
 
 그러면, ~/.emacs 파일 또는 ~/.emacs.d/init.el 파일 내에 다음과 같이 적어 두시면 됩니다:
 
-(add-to-list 'load-path "~/.emacs.d/hangul3")
-
-(require 'hangul-c3k)
-
+(add-to-list 'load-path "~/.emacs.d/hangul3")   
+(require 'hangul-c3k)   
 (setq default-input-method "korean-hangul-c3k")
 
 
