@@ -93,6 +93,7 @@
 ;;                         + (jong_index -1000)
 ;; e.g., 힣's unicode = ?\xd7a3 = ?\xac00 + (588* 18) + (28* 20) + 27
 ;; Note: ㅎ(cho),ㅣ(jung),ㅎ(jong) have indices 19, 121, and 1027, respectively.
+;;       (These indices are not standard; they are temporarily assigned by me.)
 
 
 ;; The combination rule for choseong in hangul-c3k is:
@@ -331,7 +332,7 @@
 
 ;; Table 3. Hangul Compatibility Jamo (i.e., Jaeum, Moeum)
 ;; +------------+------------+------------+
-;; | Index      | Consonant  |   Vowel    |
+;; | Index      | Consonants |   Vowels   |
 ;; +------------+------------+------------+
 ;;   1            ㄱ ?\x3131    ㅏ ?\x314f
 ;;   2            ㄲ ?\x3132    ㅐ ?\x3150
@@ -425,7 +426,7 @@ Setup `quail-overlay' to the last character."
   "Return the double Jamo index calculated from the arguments.
 CHAR1 and CHAR2 are Hangul Jamo indices.
 Return `char1' if CHAR1 and CHAR2 can not be combined."
-  (let* ((char0 (cdr (assoc char1 hangul-c3k-djamo-table))))
+  (let ((char0 (cdr (assoc char1 hangul-c3k-djamo-table))))
     (if char0
         (let ((i (length char0)))
           (catch 'found
