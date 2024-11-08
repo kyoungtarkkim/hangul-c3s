@@ -139,7 +139,7 @@
 
 (defconst hangul-c3s-djamo-table ; This is an alist.
     ;; choseong
-  '((1 . [1 10 12 19])        ; ㄱ(k) + ㄱ(k),ㅅ(n),ㅇ(o),ㅎ(h)
+  '((1 . [1 10 12 19])        ; ㄱ(k) + ㄱ(k),ㅅ(n),ㅇ(j),ㅎ(h)
     (3 . [13 19])             ; ㄴ(u) + ㅈ(l),ㅎ(h)
     (4 . [4 6 12 19])         ; ㄷ(i) + ㄷ(i),ㄹ(m),ㅇ(j),ㅎ(h)
     (6 . [1 7 8 10 19])       ; ㄹ(m) + ㄱ(k),ㅁ(y),ㅂ(o),ㅅ(n),ㅎ(h)
@@ -147,8 +147,6 @@
     (10 . [10 12])            ; ㅅ(n) + ㅅ(n),ㅇ(j)
     (13 . [13 12 19])         ; ㅈ(l) + ㅈ(l),ㅇ(j),ㅎ(h)
     (12 . [1 4 8 10 13])      ; ㅇ(j) + ㄱ(k),ㄷ(i),ㅂ(o),ㅅ(n),ㅈ(l)
-    (17 . [6])                ; ㅌ(hi,ih) + ㄹ(m)
-    (18 . [6])                ; ㅍ(ho,oh) + ㄹ(m)
     (19 . [1 4 8 13])         ; ㅎ(h) + ㄱ(k),ㄷ(i),ㅂ(o),ㅈ(l)
 
     ;; jungseong
@@ -296,11 +294,11 @@
 
    ?\x3a ?\x3b ?\x3c ?\x3d ?\x3e ?\x3f ?\x40
 
-   ?\x2018 ?\x25b3 ?\x300a ?\x201c ?\x3010 ?\x201d ?\x25cb ?\x2715 ?\x2192 ?\x00b7 ?\x22ef ?\x2f ?\x119e ?\C-g ?\x2015 ?\x260e ?\x300c ?\x3011 ?\x2019 ?\x25a1 ?\x2190 ?\x300b ?\x300d ?\x3009 ?\x203b ?\x3008
+   ?\x2018 ?\x25b3 ?\x300a ?\x201c ?\x3010 ?\x201d ?\x25cb ?\x2715 ?\x2192 ?\x00b7 ?\x22ef ?\x2015 ?\x119e ?\C-g ?\x3010 ?\x3011 ?\x300c ?\x3011 ?\x2019 ?\x25a1 ?\x2190 ?\x300b ?\x300d ?\x3009 ?\x203b ?\x3008
 
    ?\x5b ?\x5c ?\x5d ?\x5e ?\x5f ?\x60
 
-   [?\x116d ?\x11b7] [?\x1163 ?\x110f] [?\x1173 ?\x11c2] [?\x1175 ?\x11bc] [?\x1166 ?\x11a8] [?\x1161 ?\x11bf] ?\x1169 ?\x1112 ?\x1103 ?\x110b ?\x1100 ?\x110c ?\x1105 ?\x1109 ?\x1107 ?\x116e [?\x1172 ?\x11bb] [?\x116e ?\x11c0] [?\x1162 ?\x11ab] [?\x1167 ?\x11be] ?\x1102 ?\x1165 [?\x1174 ?\x11af] [?\x1164 ?\x11ba] ?\x1106 [?\x1168 ?\x11b8]
+   [?\x116d ?\x11b7] ?\x1163 [?\x1173 ?\x11c2] [?\x1175 ?\x11bc] [?\x1166 ?\x11a8] [?\x1161 ?\x11bf] ?\x1169 ?\x1112 ?\x1103 ?\x110b ?\x1100 ?\x110c ?\x1105 ?\x1109 ?\x1107 ?\x116e [?\x1172 ?\x11bb] [?\x116e ?\x11c0] [?\x1162 ?\x11ab] [?\x1167 ?\x11be] ?\x1102 ?\x1165 [?\x1174 ?\x11af] [?\x1164 ?\x11ba] ?\x1106 [?\x1168 ?\x11b8]
 
    ?\x7b ?\x7c ?\x7d ?\x7e])
 
@@ -372,7 +370,7 @@ Return a zero-length string if the conversion fails."
    (decode-char 'ucs
                 (if (and (/= cho 0) (/= jung 0))
                     (+ #xac00
-                       (* 588 (- cho 1))
+                       (* 588 (1- cho))
                        (* 28 (- jung 101))
                        (cond
                         ((/= jong 0) (- jong 1000))
@@ -506,9 +504,9 @@ Return `char1' if CHAR1 and CHAR2 can not be combined."
 
 
 ;; The following def-substitution is a combined version of
-;; `hangul-input-method-cho',
-;; `hangul-input-method-jung',
-;; and `hangul-input-method-jong'
+;; `hangul3-input-method-cho',
+;; `hangul3-input-method-jung',
+;; and `hangul3-input-method-jong'
 ;; in the original `hangul.el'.
 (defsubst hangul-c3s-input-method-individual (char)
   "Store Hangul Jamo index CHAR in `hangul-c3s-queue' for choseong, jungseong,
@@ -631,48 +629,47 @@ When a Korean input method is off, convert the following hangul character."
 (defun hangul-c3s-input-method-internal (key)
   (let ((charx (aref hangul-c3s-keymap (- key 33))))
     (if (vectorp charx) (setq charx (aref charx hangul-c3s-galma-mode)))
-    (cond ((and (>= charx #x1100) (<= charx #x1112))
+    (cond ((and (>= charx #x1100) (<= charx #x1112)) ;; choseong
            (progn
              (setq hangul-c3s-galma-mode 0)
              (hangul-c3s-input-method-individual (- charx #x1100 -1))))
-          ((and (>= charx #x1161) (<= charx #x1175))
+          ((and (>= charx #x1161) (<= charx #x1175)) ;; jungseong
            (if (/= key ?p)
                (progn
                  (setq hangul-c3s-galma-mode 1)
                  (hangul-c3s-input-method-individual (- charx #x1161 -101)))
-             (progn
                (setq hangul-c3s-galma-mode 0)
-               (hangul-c3s-input-method-individual 114))))
-          ((= charx #x11bd)
+               (hangul-c3s-input-method-individual 114)))
+          ((= charx #x11bd)                          ;; number 2
            (setq hangul-c3s-galma-mode 0)
            (if (zerop (aref hangul-c3s-queue 4))
                  (hangul-c3s-input-method-individual 1022)
              (setq hangul-c3s-queue (make-vector 6 0))
              (insert ?2)
              (move-overlay quail-overlay (point) (point))))
-          ((= charx #x11ae)
+          ((= charx #x11ae)                          ;; number 3
            (setq hangul-c3s-galma-mode 0)
            (if (zerop (aref hangul-c3s-queue 4))
                  (hangul-c3s-input-method-individual 1007)
              (setq hangul-c3s-queue (make-vector 6 0))
              (insert ?3)
              (move-overlay quail-overlay (point) (point))))
-          ((= charx #x11c1)
+          ((= charx #x11c1)                          ;; number 4
            (setq hangul-c3s-galma-mode 0)
            (if (zerop (aref hangul-c3s-queue 4))
                  (hangul-c3s-input-method-individual 1026)
              (setq hangul-c3s-queue (make-vector 6 0))
              (insert ?4)
              (move-overlay quail-overlay (point) (point))))
-          ((and (>= charx #x11a8) (<= charx #x11c2))
+          ((and (>= charx #x11a8) (<= charx #x11c2)) ;; jongseong
            (progn
              (setq hangul-c3s-galma-mode 1)
              (hangul-c3s-input-method-individual (- charx #x11a8 -1001))))
-          ((and (= charx ?.) (zerop hangul-c3s-galma-mode) (not (zerop (aref hangul-c3s-queue 0))) (zerop (aref hangul-c3s-queue 2)))
+          ((and (= charx ?.) (zerop hangul-c3s-galma-mode) (not (zerop (aref hangul-c3s-queue 0))) (zerop (aref hangul-c3s-queue 2)))  ;; period 
            (progn
              (setq hangul-c3s-galma-mode 0)
              (hangul-c3s-input-method-individual 109)))
-          ((= charx ?\C-g)
+          ((= charx ?\C-g)                           ;; Shift + n
            (setq hangul-c3s-galma-mode 0)
            (setq hangul-c3s-queue (make-vector 6 0))
            (funcall #'keyboard-quit))
