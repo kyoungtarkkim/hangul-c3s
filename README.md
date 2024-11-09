@@ -51,8 +51,10 @@ Original 참신세벌식 그리고 참신세벌식D 자판과 세모이 자판�
 
 그러면, ~/.emacs 파일 또는 ~/.emacs.d/init.el 파일 내에 다음과 같이 적어 두시면 됩니다(만일, doom을 사용하신다면 ~/.doom.d/config.el에 쓰시면 됩니다):
   
+```elisp
 (add-to-list 'load-path "~/.emacs.d/hangul3")   
 (require 'hangul-c3s)   
 (setq default-input-method "korean-hangul-c3s")
+```
   
 참고로, emacs내에서 한글 내부 입력기 변환은 Shift+space 또는 Ctrl+backslash를 통해 할 수 있습니다!
