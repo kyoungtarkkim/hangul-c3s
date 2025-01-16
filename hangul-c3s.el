@@ -267,7 +267,7 @@
 
    ?\x5b ?\x5c ?\x5d ?\x5e ?\x5f ?\x60
 
-   [?\x116d ?\x11b7] ?\x1163 [?\x1173 ?\x11c2] [?\x1175 ?\x11bc] [?\x1166 ?\x11a8] [?\x1161 ?\x11bf] ?\x1169 ?\x1112 ?\x1103 ?\x110b ?\x1100 ?\x110c ?\x1105 ?\x1109 ?\x1107 ?\x116e [?\x1172 ?\x11bb] [?\x116e ?\x11c0] [?\x1162 ?\x11ab] [?\x1167 ?\x11be] ?\x1102 ?\x1165 [?\x1174 ?\x11af] [?\x1164 ?\x11ba] ?\x1106 [?\x1168 ?\x11b8]
+   [?\x116d ?\x11b7] ?\x1163 [?\x1173 ?\x11c2] [?\x1175 ?\x11bc] [?\x1166 ?\x11a8] [?\x1161 ?\x11bf] ?\x1169 ?\x1112 ?\x1103 ?\x110b ?\x1100 ?\x110c ?\x1105 ?\x1109 ?\x1107 ?\x2e [?\x1172 ?\x11bb] [?\x116e ?\x11c0] [?\x1162 ?\x11ab] [?\x1167 ?\x11be] ?\x1102 ?\x1165 [?\x1174 ?\x11af] [?\x1164 ?\x11ba] ?\x1106 [?\x1168 ?\x11b8]
 
    ?\x7b ?\x7c ?\x7d ?\x7e])
 
@@ -658,14 +658,10 @@ When a Korean input method is off, convert the following hangul character."
            (hangul-c3s-input-method-individual (- charx #x1100 -1)))
 
           ((and (>= charx #x1161) (<= charx #x1175))        ;; jungseong
-           (if (/= key ?p)
-               (progn
-                 (if (zerop (aref hangul-c3s-queue 0))
+           (if (zerop (aref hangul-c3s-queue 0))
                      (setq hangul-c3s-galma-mode 0)
-                   (setq hangul-c3s-galma-mode 1))
-                 (hangul-c3s-input-method-individual (- charx #x1161 -101)))
-             (setq hangul-c3s-galma-mode 0)
-             (hangul-c3s-input-method-individual 114)))     ;; ㅜ
+             (setq hangul-c3s-galma-mode 1))
+           (hangul-c3s-input-method-individual (- charx #x1161 -101)))
 
           ((and (>= charx #x11a8) (<= charx #x11c2))        ;; jongseong
            ;; 모음 결합 파트
@@ -697,7 +693,28 @@ When a Korean input method is off, convert the following hangul character."
                     (hangul-c3s-input-method-individual (- charx #x11a8 -1001)))))
 
           (t (cond
-              ((and (= charx ?.)
+              ((and (= key ?p)
+                    (zerop hangul-c3s-galma-mode)
+                    (not (zerop (aref hangul-c3s-queue 0)))
+                    (zerop (aref hangul-c3s-queue 1)))
+               (setq hangul-c3s-galma-mode 0)
+               (hangul-c3s-input-method-individual 114))    ;; ㅜ
+
+              ((and (= key ?\[)
+                    (zerop hangul-c3s-galma-mode)
+                    (not (zerop (aref hangul-c3s-queue 0)))
+                    (zerop (aref hangul-c3s-queue 1)))
+               (setq hangul-c3s-galma-mode 0)
+               (hangul-c3s-input-method-individual 114))    ;; ㅜ
+
+              ((and (= key ?.)
+                    (zerop hangul-c3s-galma-mode)
+                    (not (zerop (aref hangul-c3s-queue 0)))
+                    (zerop (aref hangul-c3s-queue 1)))
+               (setq hangul-c3s-galma-mode 0)
+               (hangul-c3s-input-method-individual 109))    ;; ㅗ
+
+              ((and (= key ?/)
                     (zerop hangul-c3s-galma-mode)
                     (not (zerop (aref hangul-c3s-queue 0)))
                     (zerop (aref hangul-c3s-queue 1)))
@@ -705,78 +722,66 @@ When a Korean input method is off, convert the following hangul character."
                (hangul-c3s-input-method-individual 109))    ;; ㅗ
 
 
-              ((and (= charx ?/)
+              ((and (= key ?\;)
                     (zerop hangul-c3s-galma-mode)
-                    (= (aref hangul-c3s-queue 0) 1)         ;; ㄱ
+                    (or
+                     (= (aref hangul-c3s-queue 0) 1)        ;; ㄱ
+                     (= (aref hangul-c3s-queue 0) 2)        ;; ㄲ
+                     (= (aref hangul-c3s-queue 0) 16)       ;; ㅈ
+                     (= (aref hangul-c3s-queue 0) 13)       ;; ㅈ
+                     (= (aref hangul-c3s-queue 0) 14)       ;; ㅉ
+                     (= (aref hangul-c3s-queue 0) 15)       ;; ㅊ
+                     (= (aref hangul-c3s-queue 0) 10)       ;; ㅅ
+                     (= (aref hangul-c3s-queue 0) 11)       ;; ㅆ
+                     )
                     (zerop (aref hangul-c3s-queue 1)))
                (setq hangul-c3s-galma-mode 0)
-               (aset hangul-c3s-queue 0 0)
-               (hangul-c3s-input-method-individual 16)      ;; ㅋ
-               (hangul-c3s-input-method-individual 109))    ;; ㅗ
+               (hangul-c3s-input-method-individual 114))    ;; ㅜ
 
-              ((and (= charx ?/)
+              ((and (= key ?\;)
                     (zerop hangul-c3s-galma-mode)
-                    (= (aref hangul-c3s-queue 0) 4)         ;; ㄷ
+                    (or
+                     (= (aref hangul-c3s-queue 0) 4)        ;; ㄷ
+                     (= (aref hangul-c3s-queue 0) 5)        ;; ㄸ
+                     (= (aref hangul-c3s-queue 0) 17)       ;; ㅌ
+                     (= (aref hangul-c3s-queue 0) 8)        ;; ㅂ
+                     (= (aref hangul-c3s-queue 0) 9)        ;; ㅃ
+                     (= (aref hangul-c3s-queue 0) 18)       ;; ㅍ
+                     )
                     (zerop (aref hangul-c3s-queue 1)))
                (setq hangul-c3s-galma-mode 0)
-               (aset hangul-c3s-queue 0 0)
-               (hangul-c3s-input-method-individual 17)      ;; ㅌ
-               (hangul-c3s-input-method-individual 109))    ;; ㅗ
-
-              ((and (= charx ?/)
-                    (zerop hangul-c3s-galma-mode)
-                    (= (aref hangul-c3s-queue 0) 8)         ;; ㅂ
-                    (zerop (aref hangul-c3s-queue 1)))
-               (setq hangul-c3s-galma-mode 0)
-               (aset hangul-c3s-queue 0 0)
-               (hangul-c3s-input-method-individual 18)      ;; ㅍ
-               (hangul-c3s-input-method-individual 109))    ;; ㅗ
-
-              ((and (= charx ?/)
-                    (zerop hangul-c3s-galma-mode)
-                    (= (aref hangul-c3s-queue 0) 13)        ;; ㅈ
-                    (zerop (aref hangul-c3s-queue 1)))
-               (setq hangul-c3s-galma-mode 0)
-               (aset hangul-c3s-queue 0 0)
-               (hangul-c3s-input-method-individual 15)      ;; ㅊ
                (hangul-c3s-input-method-individual 109))    ;; ㅗ
 
 
-              ((and (= charx ?\;)
+              ((and (= key ?\')
                     (zerop hangul-c3s-galma-mode)
-                    (= (aref hangul-c3s-queue 0) 1)         ;; ㄱ
+                    (or
+                     (= (aref hangul-c3s-queue 0) 1)        ;; ㄱ
+                     (= (aref hangul-c3s-queue 0) 2)        ;; ㄲ
+                     (= (aref hangul-c3s-queue 0) 16)       ;; ㅈ
+                     (= (aref hangul-c3s-queue 0) 13)       ;; ㅈ
+                     (= (aref hangul-c3s-queue 0) 14)       ;; ㅉ
+                     (= (aref hangul-c3s-queue 0) 15)       ;; ㅊ
+                     (= (aref hangul-c3s-queue 0) 10)       ;; ㅅ
+                     (= (aref hangul-c3s-queue 0) 11)       ;; ㅆ
+                     )
                     (zerop (aref hangul-c3s-queue 1)))
                (setq hangul-c3s-galma-mode 0)
-               (aset hangul-c3s-queue 0 0)
-               (hangul-c3s-input-method-individual 16)      ;; ㅋ
                (hangul-c3s-input-method-individual 114))    ;; ㅜ
 
-              ((and (= charx ?\;)
+              ((and (= key ?\')
                     (zerop hangul-c3s-galma-mode)
-                    (= (aref hangul-c3s-queue 0) 4)         ;; ㄷ
+                    (or
+                     (= (aref hangul-c3s-queue 0) 4)        ;; ㄷ
+                     (= (aref hangul-c3s-queue 0) 5)        ;; ㄸ
+                     (= (aref hangul-c3s-queue 0) 17)       ;; ㅌ
+                     (= (aref hangul-c3s-queue 0) 8)        ;; ㅂ
+                     (= (aref hangul-c3s-queue 0) 9)        ;; ㅃ
+                     (= (aref hangul-c3s-queue 0) 18)       ;; ㅍ
+                     )
                     (zerop (aref hangul-c3s-queue 1)))
                (setq hangul-c3s-galma-mode 0)
-               (aset hangul-c3s-queue 0 0)
-               (hangul-c3s-input-method-individual 17)      ;; ㅌ
-               (hangul-c3s-input-method-individual 114))    ;; ㅜ
-
-              ((and (= charx ?\;)
-                    (zerop hangul-c3s-galma-mode)
-                    (= (aref hangul-c3s-queue 0) 8)         ;; ㅂ
-                    (zerop (aref hangul-c3s-queue 1)))
-               (setq hangul-c3s-galma-mode 0)
-               (aset hangul-c3s-queue 0 0)
-               (hangul-c3s-input-method-individual 18)      ;; ㅍ
-               (hangul-c3s-input-method-individual 114))    ;; ㅜ
-
-              ((and (= charx ?\;)
-                    (zerop hangul-c3s-galma-mode)
-                    (= (aref hangul-c3s-queue 0) 13)        ;; ㅈ
-                    (zerop (aref hangul-c3s-queue 1)))
-               (setq hangul-c3s-galma-mode 0)
-               (aset hangul-c3s-queue 0 0)
-               (hangul-c3s-input-method-individual 15)      ;; ㅊ
-               (hangul-c3s-input-method-individual 114))    ;; ㅜ
+               (hangul-c3s-input-method-individual 109))    ;; ㅗ
 
 
               (t (cond
