@@ -725,14 +725,17 @@ When a Korean input method is off, convert the following hangul character."
               ((and (= key ?\;)
                     (zerop hangul-c3s-galma-mode)
                     (or
+                     (= (aref hangul-c3s-queue 0) 19)       ;; ㅎ
+                     (= (aref hangul-c3s-queue 0) 12)       ;; ㅇ
                      (= (aref hangul-c3s-queue 0) 1)        ;; ㄱ
                      (= (aref hangul-c3s-queue 0) 2)        ;; ㄲ
-                     (= (aref hangul-c3s-queue 0) 16)       ;; ㅈ
+                     (= (aref hangul-c3s-queue 0) 16)       ;; ㅋ
                      (= (aref hangul-c3s-queue 0) 13)       ;; ㅈ
                      (= (aref hangul-c3s-queue 0) 14)       ;; ㅉ
                      (= (aref hangul-c3s-queue 0) 15)       ;; ㅊ
                      (= (aref hangul-c3s-queue 0) 10)       ;; ㅅ
                      (= (aref hangul-c3s-queue 0) 11)       ;; ㅆ
+                     (= (aref hangul-c3s-queue 0) 6)        ;; ㄹ
                      )
                     (zerop (aref hangul-c3s-queue 1)))
                (setq hangul-c3s-galma-mode 0)
@@ -741,6 +744,8 @@ When a Korean input method is off, convert the following hangul character."
               ((and (= key ?\;)
                     (zerop hangul-c3s-galma-mode)
                     (or
+                     (= (aref hangul-c3s-queue 0) 7)        ;; ㅁ
+                     (= (aref hangul-c3s-queue 0) 3)        ;; ㄴ
                      (= (aref hangul-c3s-queue 0) 4)        ;; ㄷ
                      (= (aref hangul-c3s-queue 0) 5)        ;; ㄸ
                      (= (aref hangul-c3s-queue 0) 17)       ;; ㅌ
@@ -756,14 +761,17 @@ When a Korean input method is off, convert the following hangul character."
               ((and (= key ?\')
                     (zerop hangul-c3s-galma-mode)
                     (or
+                     (= (aref hangul-c3s-queue 0) 19)       ;; ㅎ
+                     (= (aref hangul-c3s-queue 0) 12)       ;; ㅇ
                      (= (aref hangul-c3s-queue 0) 1)        ;; ㄱ
                      (= (aref hangul-c3s-queue 0) 2)        ;; ㄲ
-                     (= (aref hangul-c3s-queue 0) 16)       ;; ㅈ
+                     (= (aref hangul-c3s-queue 0) 16)       ;; ㅋ
                      (= (aref hangul-c3s-queue 0) 13)       ;; ㅈ
                      (= (aref hangul-c3s-queue 0) 14)       ;; ㅉ
                      (= (aref hangul-c3s-queue 0) 15)       ;; ㅊ
                      (= (aref hangul-c3s-queue 0) 10)       ;; ㅅ
                      (= (aref hangul-c3s-queue 0) 11)       ;; ㅆ
+                     (= (aref hangul-c3s-queue 0) 6)        ;; ㄹ
                      )
                     (zerop (aref hangul-c3s-queue 1)))
                (setq hangul-c3s-galma-mode 0)
@@ -772,6 +780,8 @@ When a Korean input method is off, convert the following hangul character."
               ((and (= key ?\')
                     (zerop hangul-c3s-galma-mode)
                     (or
+                     (= (aref hangul-c3s-queue 0) 7)        ;; ㅁ
+                     (= (aref hangul-c3s-queue 0) 3)        ;; ㄴ
                      (= (aref hangul-c3s-queue 0) 4)        ;; ㄷ
                      (= (aref hangul-c3s-queue 0) 5)        ;; ㄸ
                      (= (aref hangul-c3s-queue 0) 17)       ;; ㅌ
