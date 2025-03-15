@@ -914,6 +914,15 @@ When a Korean input method is off, convert the following hangul character."
              (setq hangul-c3s-galma-mode 1)
              (hangul-c3s-input-method-individual 1023))    ;; ㅊ
 
+            ((and (= key ?g)
+                  (not (zerop hangul-c3s-galma-mode))
+                  (or
+                   (= (aref hangul-c3s-queue 1) 119)        ;; ㅡ
+                   )
+                  (zerop (aref hangul-c3s-queue 3)))
+             (setq hangul-c3s-galma-mode 1)
+             (hangul-c3s-input-method-individual 1026))    ;; ㅍ
+
             ((and (= key ?b)
                   (not (zerop hangul-c3s-galma-mode))
                   (or
